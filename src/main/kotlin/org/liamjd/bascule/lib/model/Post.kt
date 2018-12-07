@@ -19,6 +19,8 @@ interface Post {
     var newer: PostLink?
     var older: PostLink?
 
+    var rawContent: String // for the original markdown, still contains the yaml though
+
     fun getSummary(characterCount: Int = 150): String
 
     fun toModel(): Map<String, Any?> {

@@ -1,7 +1,6 @@
 package org.liamjd.bascule.lib.model
 
 import java.io.File
-import java.io.InputStream
 
 typealias Theme = String
 
@@ -23,7 +22,8 @@ class Project(val name: String, val root: File, val sourceDir: File, val outputD
         templatesDir = File(root, templates),
         yamlConfigString = yaml,
         theme = themeName,
-        model = configMap)
+        model = configMap
+        )
 
     constructor(name: String, root: File, sourceDir: File, outputDir: File, assetsDir: File, templatesDir: File, yamlConfigString: String, theme: Theme) : this(name = name,
         root = root,
