@@ -24,7 +24,7 @@ class SinglePagePDFGenerator(val posts: List<Post>) : GeneratorPipeline {
 
     override suspend fun process(project: Project, renderer: Renderer, fileHandler: FileHandler) {
 
-        val pdfFolder = fileHandler.createDirectory(project.outputDir.absolutePath, FOLDER_NAME)
+        val pdfFolder = fileHandler.createDirectory(project.dirs.output.absolutePath, FOLDER_NAME)
 
         val outputFilename = pdfFolder.absolutePath + "/${project.name}.pdf"
 

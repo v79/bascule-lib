@@ -6,7 +6,7 @@ import io.mockk.mockk
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.liamjd.bascule.lib.FileHandler
-import org.liamjd.bascule.lib.model.Project
+import org.liamjd.bascule.lib.model.Project.kt
 import org.liamjd.bascule.lib.render.Renderer
 import org.spekframework.spek2.Spek
 import java.io.File
@@ -17,7 +17,7 @@ class SinglePagePDFGeneratorTest : Spek({
     group("Can compile and run but do nothing useful") {
 
         val generator by memoized { SinglePagePDFGenerator() }
-        lateinit var project: Project
+        lateinit var project: Project.kt
         val mRenderer = mockk<Renderer>()
         val mFileHandler = mockk<FileHandler>()
 
@@ -48,12 +48,12 @@ class SinglePagePDFGeneratorTest : Spek({
 
 }
 
-fun makeProject(): Project {
+fun makeProject(): Project.kt {
     val testRoot = File("pdfGenTest")
     var yamlString = ""
     val testConfig = mapOf<String, Any>()
     val project =
-        Project("pdfGenTest", testRoot, "source", "output", "assets", "templates", yamlString, "testTheme", testConfig)
+        Project.kt("pdfGenTest", testRoot, "source", "output", "assets", "templates", yamlString, "testTheme", testConfig)
 
     return project
 }

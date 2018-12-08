@@ -17,7 +17,7 @@ plugins {
 apply plugin: 'maven-publish'
 
 group 'org.liamjd.bascule-lib'
-version '0.0.9'
+version '0.0.11'
 
 sourceCompatibility = 1.8
 
@@ -30,9 +30,11 @@ repositories {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-    
 
-    // pdf generation
+    // snakeyaml
+    compile group: 'org.yaml', name: 'snakeyaml', version: "$snakeyaml_version"
+    
+    // pdf generation - TODO: remove from this library
     compile group: 'org.apache.xmlgraphics', name: 'fop', version: '2.3'
 
     // testCompile - coroutines
@@ -45,13 +47,13 @@ dependencies {
     
     // testing - spek2
     testCompile group: "org.jetbrains.kotlin", name: "kotlin-test", version: "$kotlin_version"
-    testImplementation('org.spekframework.spek2:spek-dsl-jvm:2.0.0-alpha.1') {
+   /* testImplementation('org.spekframework.spek2:spek-dsl-jvm:2.0.0-alpha.1') {
         exclude group: 'org.jetbrains.kotlin'
     }
     testRuntimeOnly('org.spekframework.spek2:spek-runner-junit5:2.0.0-alpha.1') {
         exclude group: 'org.junit.platform'
         exclude group: 'org.jetbrains.kotlin'
-    }
+    }*/
 
     // spek requires kotlin-reflect, can be omitted if already in the classpath
     testRuntimeOnly "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
@@ -69,7 +71,7 @@ compileTestKotlin {
 
 test {
     useJUnitPlatform {
-        includeEngines 'spek2'
+//        includeEngines 'spek2'
     }
 }
 
