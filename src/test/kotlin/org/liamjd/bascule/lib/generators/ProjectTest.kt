@@ -86,9 +86,10 @@ class ProjectTest {
 
 		assertNotNull(project.configMap)
 		assertNotNull(project.generators) {
-			assertEquals(2,it.size)
+			assertEquals(3,it.size)
 			assert(it.contains(expected.generator_index))
 			assert(it.contains(expected.generator_nav))
+			assert(it.contains(expected.generator_google))
 		}
 	}
 }
@@ -127,7 +128,7 @@ object yaml {
 
 	val CUSTOM_GENERATOR_PIPELINE = """
 		siteName: customeGenPipeline
-		generators: [IndexPageGenerator, PostNavigationGenerator]
+		generators: [IndexPageGenerator, PostNavigationGenerator, org.google.sitemapxml.Generator]
 	""".replace("\t","  ")
 }
 
@@ -139,7 +140,8 @@ object expected {
 
 	val theme = "bulma"
 
-	val generator_index = "IndexPageGenerator"
-	val generator_nav = "PostNavigationGenerator"
-	val generator_taxonmy = "TaxonomyNavigationGenerator"
+	val generator_index = "org.liamjd.bascule.pipeline.IndexPageGenerator"
+	val generator_nav = "org.liamjd.bascule.pipeline.PostNavigationGenerator"
+	val generator_taxonmy = "org.liamjd.bascule.pipeline.TaxonomyNavigationGenerator"
+	val generator_google = "org.google.sitemapxml.Generator"
 }

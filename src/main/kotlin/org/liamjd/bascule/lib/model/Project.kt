@@ -5,6 +5,7 @@ import java.io.File
 
 typealias Theme = String
 typealias YamlConfig = String
+const val DEFAULT_GEN_PACKAGE = "org.liamjd.bascule.pipeline."
 
 /**
  * Class representing the overall structure of the project, mostly the directory locations for source files, templates, etc
@@ -100,7 +101,19 @@ class Project(yamlConfig: YamlConfig) {
 
 	private fun getConfigGenerators() : ArrayList<String>? {
 		if(configMap["generators"] != null) {
-			return configMap["generators"] as ArrayList<String>
+
+			val generatorArray = configMap["generators"] as ArrayList<String>
+			var packagedArray = mutableListOf<String>()
+
+			for( generator in generatorArray) {
+				if(!generator.contains(".")) {
+					packagedArray.add(DEFAULT_GEN_PACKAGE + generator)
+				} else {
+					packagedArray.add(generator)
+				}
+			}
+			return ArrayList(packagedArray)
+
 		}
 		return null
 	}

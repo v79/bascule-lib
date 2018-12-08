@@ -19,7 +19,6 @@ class SinglePagePDFGenerator(val posts: List<Post>) : GeneratorPipeline {
         get() = "fullPDF.fo"
     val FOLDER_NAME = "pdf" // TODO: move this to project model
 
-
     val fopFactory = FopFactory.newInstance(readFileFromResources("/", "fopConf.xconf").toURI())
 
     override suspend fun process(project: Project, renderer: Renderer, fileHandler: FileHandler) {
@@ -31,8 +30,6 @@ class SinglePagePDFGenerator(val posts: List<Post>) : GeneratorPipeline {
         val model = mutableMapOf<String,Any>()
         model.putAll(project.model)
         model.put("posts",posts)
-
-        println("Posts: " + posts)
 
         println("Generating PDF: " + outputFilename)
         FileOutputStream(outputFilename).use { outStream ->
