@@ -1,48 +1,121 @@
 package org.liamjd.bascule.lib.model
 
+import org.yaml.snakeyaml.Yaml
 import java.io.File
-import java.io.InputStream
 
 typealias Theme = String
+typealias YamlConfig = String
+const val DEFAULT_GEN_PACKAGE = "org.liamjd.bascule.pipeline."
 
-// TODO: probably too much in this constructor... allow some vars!
-// TODO: there's stuff in the model which shouldn't be there, like the directory names
 /**
  * Class representing the overall structure of the project, mostly the directory locations for source files, templates, etc
  */
-class Project(val name: String, val root: File, val sourceDir: File, val outputDir: File, val assetsDir: File, val templatesDir: File, val yamlConfigString: String, val theme: Theme, val model: Map<String, Any>) {
 
-    var postsPerPage = 5
-    var yamlMap: Map<String,Any> = mutableMapOf()
+class Project(yamlConfig: YamlConfig) {
 
-    constructor(name: String, root: File, source: String, output: String, assets: String, templates: String, yaml: String, themeName: String, configMap: Map<String, Any>) : this(name = name,
-        root = root,
-        sourceDir = File(root, source),
-        outputDir = File(root, output),
-        assetsDir = File(root, assets),
-        templatesDir = File(root, templates),
-        yamlConfigString = yaml,
-        theme = themeName,
-        model = configMap)
+	val name: String
+	val theme: Theme
+	val postsPerPage: Int
+	val configMap: Map<String, Any>
+	val model: Map<String, Any>
+	val dirs: Directories
+	val generators: ArrayList<String>?
+	val parentFolder: File
 
-    constructor(name: String, root: File, sourceDir: File, outputDir: File, assetsDir: File, templatesDir: File, yamlConfigString: String, theme: Theme) : this(name = name,
-        root = root,
-        sourceDir = sourceDir,
-        outputDir = outputDir,
-        assetsDir = assetsDir,
-        templatesDir = templatesDir,
-        yamlConfigString = yamlConfigString,
-        theme = theme,
-        model = mapOf())
+	init {
 
+		// initial setup
+		val yaml = Yaml();
+		if (yamlConfig.isBlank()) {
+			throw RuntimeException("Yaml configuration file is blank!")
+		}
+		configMap = yaml.load(yamlConfig)
+		parentFolder = File(System.getProperty("user.dir"))
 
-    override fun toString(): String {
-        return "ProjectStructure: name: $name, root: $root\n" +
-                "source: $sourceDir, output: $outputDir, assets: $assetsDir, templates: $templatesDir\n" +
-                "theme: $theme\n" +
-                "model: $model"
+		// set values
+		name = parentFolder.name
+		theme = getConfigString("theme", "bulma")
+		postsPerPage = getConfigInt("postsPerPage")
+		dirs = getConfigDirectories()
 
-    }
+		val tempModel = mutableMapOf<String, Any>()
+		tempModel.putAll(configMap)
+		model = tempModel
 
+		generators = getConfigGenerators()
+	}
+
+	override fun toString(): String {
+		return "ProjectStructure: name: $name,\n" +
+				"theme: $theme\n" +
+				dirs +
+				"model: $model"
+
+	}
+
+	// local functions
+	private fun getConfigString(keyName: String, defaultValue: String) = if (configMap[keyName] == null) defaultValue else configMap[keyName] as String
+
+	fun getConfigString(map: Map<String, String>, keyName: String, defaultValue: String): String {
+		if (map[keyName] == null) return defaultValue else {
+			return configMap[keyName] as String
+		}
+	}
+
+	private fun getConfigInt(keyName: String) = if (configMap[keyName] == null) 1 else configMap[keyName] as Int
+
+	private fun getDirectory(dirMap: Map<String, Any>, dirName: String, defaultName: String): File {
+		val foundFolderName = if (dirMap[dirName] == null) {
+			defaultName
+		} else {
+			dirMap[dirName]!!
+		}
+		return File(parentFolder, foundFolderName as String)
+	}
+
+	@Suppress("UNCHECKED_CAST")
+	private fun getConfigDirectories(): Directories {
+		if (configMap["directories"] != null) {
+
+			val dirs = configMap["directories"] as Map<String, Any>
+			val sourceDir = getDirectory(dirs, "source", "sources")
+			val assetsDir = getDirectory(dirs, "assets", "assets")
+			val templatesDir = getDirectory(dirs, "templates", "templates")
+			val outputDir = getDirectory(dirs, "output", "output")
+
+			val custom = dirs["custom"]
+			var customDirs: MutableMap<String, File>? = mutableMapOf<String, File>()
+			if (custom != null) {
+				for (customKey in custom as Map<String, String>) {
+					customDirs?.put(customKey.key, File(parentFolder, custom[customKey.key]))
+				}
+			}
+			if (customDirs != null && customDirs.isEmpty()) {
+				customDirs = null
+			}
+
+			return Directories(parentFolder, sourceDir, outputDir, assetsDir, templatesDir, customDirs)
+		} else return Directories.Defaults.get(parentFolder)
+
+	}
+
+	private fun getConfigGenerators() : ArrayList<String>? {
+		if(configMap["generators"] != null) {
+
+			@Suppress("UNCHECKED_CAST")
+			val generatorArray = configMap["generators"] as ArrayList<String>
+			var packagedArray = mutableListOf<String>()
+
+			for( generator in generatorArray) {
+				if(!generator.contains(".")) {
+					packagedArray.add(DEFAULT_GEN_PACKAGE + generator)
+				} else {
+					packagedArray.add(generator)
+				}
+			}
+			return ArrayList(packagedArray)
+
+		}
+		return null
+	}
 }
-
