@@ -102,6 +102,7 @@ class Project(yamlConfig: YamlConfig) {
 	private fun getConfigGenerators() : ArrayList<String>? {
 		if(configMap["generators"] != null) {
 
+			@Suppress("UNCHECKED_CAST")
 			val generatorArray = configMap["generators"] as ArrayList<String>
 			var packagedArray = mutableListOf<String>()
 
