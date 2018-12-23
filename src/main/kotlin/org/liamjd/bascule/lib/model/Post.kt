@@ -25,7 +25,7 @@ interface Post {
 
     fun toModel(): Map<String, Any?> {
         val modelMap = mutableMapOf<String, Any?>()
-        modelMap.put("sourceFileName.name", sourceFileName)
+        modelMap.put("sourceFileName", sourceFileName)
         modelMap.put("url", url)
         modelMap.put("title", title)
         modelMap.put("author", author)
