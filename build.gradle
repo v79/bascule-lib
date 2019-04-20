@@ -3,6 +3,7 @@ buildscript {
     ext.slf4j_version = '1.6.2'
     ext.mockk_version = '1.8.13.kotlin13'
     ext.snakeyaml_version = '1.23'
+    ext.flexmark_version = '0.42.0'
 }
 
 plugins {
@@ -13,7 +14,7 @@ plugins {
 apply plugin: 'maven-publish'
 
 group 'org.liamjd.bascule-lib'
-version '0.0.13'
+version '0.0.15'
 
 sourceCompatibility = 1.8
 
@@ -53,6 +54,10 @@ dependencies {
     
     // testing - mockk
     testCompile group: "io.mockk", name: "mockk", version: "${mockk_version}"
+
+
+    // markdown - probably want to be more selective with this!
+    compile group: 'com.vladsch.flexmark', name: 'flexmark-all', version: "$flexmark_version"
 }
 
 compileKotlin {

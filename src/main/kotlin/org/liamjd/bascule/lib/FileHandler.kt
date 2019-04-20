@@ -26,4 +26,6 @@ interface FileHandler {
     fun emptyFolder(folder: File, fileType: String)
 
     fun emptyFolder(folder: File)
+
+    fun copyFile(source: File, destination: File): File
 }
