@@ -21,6 +21,7 @@ class Project(yamlConfig: YamlConfig) {
 	val dirs: Directories
 	val generators: ArrayList<String>?
 	val parentFolder: File
+	var clean: Boolean = false
 
 	init {
 
