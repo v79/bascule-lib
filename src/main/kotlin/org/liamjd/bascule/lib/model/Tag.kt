@@ -1,6 +1,6 @@
 package org.liamjd.bascule.lib.model
 
-data class Tag(val label: String, var url: String, var postCount: Int = 0, var hasPosts: Boolean = false) {
+data class Tag(val label: String, var url: String, var postCount: Int = 1, var hasPosts: Boolean = false) {
     // I don't care about postCount, etc when storing in a set
     override fun equals(other: Any?): Boolean {
         if(other is Tag) {
