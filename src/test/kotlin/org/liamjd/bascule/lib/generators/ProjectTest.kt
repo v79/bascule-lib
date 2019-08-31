@@ -8,6 +8,7 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 
 class ProjectTest {
+
 	@Test
 	fun `throws exception for an empty file`() {
 		assertThrows<RuntimeException> {

@@ -1,10 +1,12 @@
 package org.liamjd.bascule.lib.model
 
+import com.vladsch.flexmark.util.options.MutableDataSet
 import org.yaml.snakeyaml.Yaml
 import java.io.File
 
 typealias Theme = String
 typealias YamlConfig = String
+
 const val DEFAULT_GEN_PACKAGE = "org.liamjd.bascule.pipeline."
 
 /**
@@ -22,6 +24,8 @@ class Project(yamlConfig: YamlConfig) {
 	val generators: ArrayList<String>?
 	val parentFolder: File
 	var clean: Boolean = false
+
+	val markdownOptions = MutableDataSet()
 
 	init {
 
@@ -44,6 +48,7 @@ class Project(yamlConfig: YamlConfig) {
 		model = tempModel
 
 		generators = getConfigGenerators()
+
 	}
 
 	override fun toString(): String {
@@ -100,15 +105,15 @@ class Project(yamlConfig: YamlConfig) {
 
 	}
 
-	private fun getConfigGenerators() : ArrayList<String>? {
-		if(configMap["generators"] != null) {
+	private fun getConfigGenerators(): ArrayList<String>? {
+		if (configMap["generators"] != null) {
 
 			@Suppress("UNCHECKED_CAST")
 			val generatorArray = configMap["generators"] as ArrayList<String>
 			var packagedArray = mutableListOf<String>()
 
-			for( generator in generatorArray) {
-				if(!generator.contains(".")) {
+			for (generator in generatorArray) {
+				if (!generator.contains(".")) {
 					packagedArray.add(DEFAULT_GEN_PACKAGE + generator)
 				} else {
 					packagedArray.add(generator)
