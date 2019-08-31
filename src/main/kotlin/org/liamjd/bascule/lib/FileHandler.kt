@@ -19,6 +19,8 @@ interface FileHandler {
 
     fun readFileAsString(folder: File, fileName: String): String
 
+    fun readFileAsString(fileName: String) : String
+
     fun writeFile(destination: File, finalFileName: String, data: String)
 
     fun copyFileFromResources(fileName: String, destination: File, destFileName: String? = null, sourceDir: String = "")
@@ -30,4 +32,6 @@ interface FileHandler {
     fun emptyFolder(folder: File)
 
     fun copyFile(source: File, destination: File): File
+
+    fun getFile(folder: File, fileName: String) : File
 }

@@ -1,5 +1,5 @@
 package org.liamjd.bascule.lib.render
 
-interface Renderer {
+interface TemplatePageRenderer {
     fun render(model: Map<String,Any?>, templateName: String) : String
 }
