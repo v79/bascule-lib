@@ -7,5 +7,5 @@ import org.liamjd.bascule.lib.render.TemplatePageRenderer
 interface GeneratorPipeline {
 
     val TEMPLATE: String
-    suspend fun process(project: Project, renderer: TemplatePageRenderer, fileHandler: FileHandler)
+    suspend fun process(project: Project, renderer: TemplatePageRenderer, fileHandler: FileHandler, clean: Boolean = true)
 }
