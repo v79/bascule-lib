@@ -22,6 +22,7 @@ class Project(yamlConfig: YamlConfig) {
 	val model: Map<String, Any>
 	val dirs: Directories
 	val generators: ArrayList<String>?
+	val extensions: ArrayList<String>?
 	val parentFolder: File
 	var clean: Boolean = false
 
@@ -47,7 +48,8 @@ class Project(yamlConfig: YamlConfig) {
 		tempModel.putAll(configMap)
 		model = tempModel
 
-		generators = getConfigGenerators()
+		generators = getConfigPlugins("generators")
+		extensions = getConfigPlugins("extensions")
 
 	}
 
@@ -105,18 +107,17 @@ class Project(yamlConfig: YamlConfig) {
 
 	}
 
-	private fun getConfigGenerators(): ArrayList<String>? {
-		if (configMap["generators"] != null) {
-
+	private fun getConfigPlugins(configName: String) : ArrayList<String>? {
+		if (configMap[configName] != null) {
 			@Suppress("UNCHECKED_CAST")
-			val generatorArray = configMap["generators"] as ArrayList<String>
+			val pluginArray = configMap[configName] as ArrayList<String>
 			var packagedArray = mutableListOf<String>()
 
-			for (generator in generatorArray) {
-				if (!generator.contains(".")) {
-					packagedArray.add(DEFAULT_GEN_PACKAGE + generator)
+			for (plugin in pluginArray) {
+				if (!plugin.contains(".")) {
+					packagedArray.add(DEFAULT_GEN_PACKAGE + plugin)
 				} else {
-					packagedArray.add(generator)
+					packagedArray.add(plugin)
 				}
 			}
 			return ArrayList(packagedArray)
@@ -124,4 +125,5 @@ class Project(yamlConfig: YamlConfig) {
 		}
 		return null
 	}
+
 }
