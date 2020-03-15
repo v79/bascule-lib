@@ -14,7 +14,7 @@ plugins {
 apply plugin: 'maven-publish'
 
 group 'org.liamjd.bascule-lib'
-version '0.0.21'
+version '0.0.22'
 
 sourceCompatibility = 1.8
 

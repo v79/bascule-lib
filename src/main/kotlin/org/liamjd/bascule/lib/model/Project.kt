@@ -20,6 +20,7 @@ class Project(yamlConfig: YamlConfig) {
 	val postsPerPage: Int
 	val configMap: Map<String, Any>
 	val model: Map<String, Any>
+	val tagging: Set<String>
 	val dirs: Directories
 	val generators: ArrayList<String>?
 	val extensions: ArrayList<String>?
@@ -47,6 +48,7 @@ class Project(yamlConfig: YamlConfig) {
 		val tempModel = mutableMapOf<String, Any>()
 		tempModel.putAll(configMap)
 		model = tempModel
+		tagging = getTaxonomySet()
 
 		generators = getConfigPlugins("generators")
 		extensions = getConfigPlugins("extensions")
@@ -79,6 +81,15 @@ class Project(yamlConfig: YamlConfig) {
 			dirMap[dirName]!!
 		}
 		return File(parentFolder, foundFolderName as String)
+	}
+
+	private fun getTaxonomySet(): Set<String> {
+		if(configMap["tagging"] == null) {
+			return setOf<String>("tags")
+		} else {
+			val taggingList = configMap["tagging"] as ArrayList<String>
+			return taggingList.toSet()
+		}
 	}
 
 	@Suppress("UNCHECKED_CAST")

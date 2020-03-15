@@ -11,7 +11,7 @@ interface Post {
     var layout: String
     var date: LocalDate
 
-    var tags: MutableSet<Tag>
+    var tags: MutableMap<String,MutableSet<Tag>>
     var slug: String
     var attributes: MutableMap<String, Any>
 
