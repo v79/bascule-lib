@@ -11,7 +11,7 @@ interface Post {
     var layout: String
     var date: LocalDate
 
-    var tags: MutableMap<String,MutableSet<Tag>>
+    var tags: MutableSet<Tag>
     var slug: String
     var attributes: MutableMap<String, Any>
 
@@ -39,4 +39,6 @@ interface Post {
 
         return modelMap
     }
+
+    fun groupTagsByCategory(): Map<out String, Set<Tag>?>
 }
