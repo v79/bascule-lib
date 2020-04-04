@@ -1,6 +1,6 @@
 package org.liamjd.bascule.lib.model
 
-import com.vladsch.flexmark.util.options.MutableDataSet
+import com.vladsch.flexmark.util.data.MutableDataSet
 import org.yaml.snakeyaml.Yaml
 import java.io.File
 

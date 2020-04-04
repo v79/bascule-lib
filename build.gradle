@@ -3,7 +3,7 @@ buildscript {
     ext.slf4j_version = '1.7.26'
     ext.mockk_version = '1.9.3.kotlin12'
     ext.snakeyaml_version = '1.23'
-    ext.flexmark_version = '0.42.0'
+    ext.flexmark_version = '0.61.0'
 }
 
 plugins {
@@ -14,7 +14,7 @@ plugins {
 apply plugin: 'maven-publish'
 
 group 'org.liamjd.bascule-lib'
-version '0.0.23'
+version '0.0.24'
 
 sourceCompatibility = 1.8
 
