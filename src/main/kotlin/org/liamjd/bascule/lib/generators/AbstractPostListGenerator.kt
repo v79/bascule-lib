@@ -38,7 +38,7 @@ abstract class AbstractPostListGenerator(val posts: List<Post>, val numPosts: In
 	 * @param[totalPages] Total number of pages in the list
 	 * @return A list of strings representing the pagination buttons, with a specific format:
 	 * _an integer_ represents a page number, e.g. 1, 2, 12...
-	 * _. a period_ represents an elipsis, i.e. numbers which have been skipped, e.g 1, 2, ..., 5.
+	 * _. a period_ represents an ellipsis, i.e. numbers which have been skipped, e.g 1, 2, ..., 5.
 	 * _* an asterisk_, representing the current page.
 	 */
 	fun buildPaginationList(currentPage: Int, totalPages: Int): List<String> {
