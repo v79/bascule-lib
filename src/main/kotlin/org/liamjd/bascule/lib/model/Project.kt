@@ -26,6 +26,7 @@ class Project(yamlConfig: YamlConfig) {
 	val extensions: ArrayList<String>?
 	val parentFolder: File
 	var clean: Boolean = false
+	var postLayouts: Set<String>
 
 	val markdownOptions = MutableDataSet()
 
@@ -44,6 +45,7 @@ class Project(yamlConfig: YamlConfig) {
 		theme = getConfigString("theme", "bulma")
 		postsPerPage = getConfigInt("postsPerPage")
 		dirs = getConfigDirectories()
+		postLayouts = getPostLayoutConfig()
 
 		val tempModel = mutableMapOf<String, Any>()
 		tempModel.putAll(configMap)
@@ -89,6 +91,15 @@ class Project(yamlConfig: YamlConfig) {
 		} else {
 			val taggingList = configMap["tagging"] as ArrayList<String>
 			return taggingList.toSet()
+		}
+	}
+
+	private fun getPostLayoutConfig(): Set<String> {
+		if(configMap["postLayouts"] == null) {
+			return setOf("post")
+		} else {
+			val layoutList = configMap["postLayouts"] as ArrayList<String>
+			return layoutList.toSet()
 		}
 	}
 

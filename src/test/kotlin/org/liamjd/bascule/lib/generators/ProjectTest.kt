@@ -23,6 +23,7 @@ class ProjectTest {
 		assertNotNull(project)
 		assertEquals("minimalTest",project.model["siteName"])
 		assertEquals(expected.theme,project.theme)
+		assertEquals(expected.layout_default,project.postLayouts.first())
 	}
 
 	@Test
@@ -93,6 +94,20 @@ class ProjectTest {
 			assert(it.contains(expected.generator_google))
 		}
 	}
+
+	@Test
+	fun `yaml provides distinct postLayout configuration`() {
+		val project = Project(yaml.CUSTOM_POST_LAYOUTS)
+		assertNotNull(project)
+
+		assertNotNull(project.configMap)
+		assertNotNull(project.postLayouts) {
+			assertEquals(2,it.size)
+			assert(it.contains(expected.layout_genre))
+			assert(it.contains(expected.layout_composer))
+			assert(!it.contains(expected.layout_default))
+		}
+	}
 }
 
 object yaml {
@@ -131,6 +146,10 @@ object yaml {
 		siteName: customeGenPipeline
 		generators: [IndexPageGenerator, PostNavigationGenerator, org.google.sitemapxml.Generator]
 	""".replace("\t","  ")
+
+	val CUSTOM_POST_LAYOUTS = """
+		postLayouts: [composer,genre]
+	""".replace("\t","  ")
 }
 
 object expected {
@@ -145,4 +164,7 @@ object expected {
 	val generator_nav = "org.liamjd.bascule.pipeline.PostNavigationGenerator"
 	val generator_taxonmy = "org.liamjd.bascule.pipeline.TaxonomyNavigationGenerator"
 	val generator_google = "org.google.sitemapxml.Generator"
+	val layout_genre = "genre"
+	val layout_composer = "composer"
+	val layout_default = "post"
 }
