@@ -1,6 +1,7 @@
 package org.liamjd.bascule.lib.model
 
 import com.vladsch.flexmark.util.data.MutableDataSet
+import org.liamjd.bascule.lib.generators.SortAndFilter
 import org.yaml.snakeyaml.Yaml
 import java.io.File
 
@@ -24,6 +25,7 @@ class Project(yamlConfig: YamlConfig) {
 	val dirs: Directories
 	val generators: ArrayList<String>?
 	val extensions: ArrayList<String>?
+	var sortAndFilter: SortAndFilter? = null
 	val parentFolder: File
 	var clean: Boolean = false
 	var postLayouts: Set<String>
@@ -54,7 +56,6 @@ class Project(yamlConfig: YamlConfig) {
 
 		generators = getConfigPlugins("generators")
 		extensions = getConfigPlugins("extensions")
-
 	}
 
 	override fun toString(): String {
