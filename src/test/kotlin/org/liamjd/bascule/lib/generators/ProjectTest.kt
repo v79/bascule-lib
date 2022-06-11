@@ -1,11 +1,9 @@
 package org.liamjd.bascule.lib.generators
 
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.liamjd.bascule.lib.model.Project
-import kotlin.test.assertEquals
-import kotlin.test.assertNotNull
-import kotlin.test.assertNull
 
 class ProjectTest {
 
@@ -21,9 +19,9 @@ class ProjectTest {
 		val project = Project(yaml.MINIMAL)
 
 		assertNotNull(project)
-		assertEquals("minimalTest",project.model["siteName"])
-		assertEquals(expected.theme,project.theme)
-		assertEquals(expected.layout_default,project.postLayouts.first())
+		assertEquals("minimalTest", project.model["siteName"])
+		assertEquals(expected.theme, project.theme)
+		assertEquals(expected.layout_default, project.postLayouts.first())
 	}
 
 	@Test
@@ -59,10 +57,11 @@ class ProjectTest {
 		assertEquals(expected.output, project.dirs.output.name)
 		assertEquals(expected.templates, project.dirs.templates.name)
 		assertEquals(expected.assets, project.dirs.assets.name)
-		assertNotNull(project.dirs.custom) {
-			assert(it.containsKey("pdf"))
-			assertEquals(it["pdf"]?.absoluteFile?.name,"pdfsGoHere")
-		}
+		assertNotNull(project.dirs.custom)
+		assert(project.dirs.custom!!.containsKey("pdf"))
+		val pdf = project.dirs.custom!!["pdf"]!!.absoluteFile.name
+		assertEquals(pdf, "pdfsGoHere")
+
 	}
 
 	@Test
@@ -75,10 +74,10 @@ class ProjectTest {
 		assertEquals(expected.templates, project.dirs.templates.name)
 		assertEquals(expected.assets, project.dirs.assets.name)
 
-		assertNotNull(project.dirs.custom) {
-			assert(it.containsKey("pdf"))
-			assertEquals(it["pdf"]?.absoluteFile?.name,"customPDF")
-		}
+		assertNotNull(project.dirs.custom)
+		assert(project.dirs.custom!!.containsKey("pdf"))
+		val pdf = project.dirs.custom!!["pdf"]!!.absoluteFile.name
+		assertEquals("customPDF", pdf)
 	}
 
 	@Test
@@ -87,12 +86,11 @@ class ProjectTest {
 		assertNotNull(project)
 
 		assertNotNull(project.configMap)
-		assertNotNull(project.generators) {
-			assertEquals(3,it.size)
-			assert(it.contains(expected.generator_index))
-			assert(it.contains(expected.generator_nav))
-			assert(it.contains(expected.generator_google))
-		}
+		assertNotNull(project.generators)
+		assertEquals(3, project.generators!!.size)
+		assert(project.generators!!.contains(expected.generator_index))
+		assert(project.generators!!.contains(expected.generator_nav))
+		assert(project.generators!!.contains(expected.generator_google))
 	}
 
 	@Test
@@ -101,12 +99,11 @@ class ProjectTest {
 		assertNotNull(project)
 
 		assertNotNull(project.configMap)
-		assertNotNull(project.postLayouts) {
-			assertEquals(2,it.size)
-			assert(it.contains(expected.layout_genre))
-			assert(it.contains(expected.layout_composer))
-			assert(!it.contains(expected.layout_default))
-		}
+		assertNotNull(project.postLayouts)
+		assertEquals(2, project.postLayouts.size)
+		assert(project.postLayouts.contains(expected.layout_genre))
+		assert(project.postLayouts.contains(expected.layout_composer))
+		assert(!project.postLayouts.contains(expected.layout_default))
 	}
 }
 
@@ -126,13 +123,13 @@ object yaml {
 			output: beta
 			templates: gamma
 			assets: delta
-	""".replace("\t","  ")
+	""".replace("\t", "  ")
 
 	val CUSTOM_ONLY = """
 		directories:
 			custom:
 				pdf: pdfsGoHere
-	""".replace("\t","  ")
+	""".replace("\t", "  ")
 
 	val MIX_OF_DIRS = """
 		siteName: mixedDirs
@@ -140,16 +137,16 @@ object yaml {
 			source: episilon
 			custom:
 				pdf: customPDF
-	""".replace("\t","  ")
+	""".replace("\t", "  ")
 
 	val CUSTOM_GENERATOR_PIPELINE = """
 		siteName: customeGenPipeline
 		generators: [IndexPageGenerator, PostNavigationGenerator, org.google.sitemapxml.Generator]
-	""".replace("\t","  ")
+	""".replace("\t", "  ")
 
 	val CUSTOM_POST_LAYOUTS = """
 		postLayouts: [composer,genre]
-	""".replace("\t","  ")
+	""".replace("\t", "  ")
 }
 
 object expected {

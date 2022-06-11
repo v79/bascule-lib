@@ -2,7 +2,6 @@ package org.liamjd.bascule.lib.generators
 
 import org.liamjd.bascule.lib.model.Post
 
-
 abstract class AbstractPostListGenerator(val posts: List<Post>, val numPosts: Int = 1, val postsPerPage: Int) {
 
 	/**
@@ -11,22 +10,22 @@ abstract class AbstractPostListGenerator(val posts: List<Post>, val numPosts: In
 	fun buildPaginationModel(projectModel: Map<String, Any>, currentPage: Int, totalPages: Int, posts: List<Post>, totalPosts: Int, tagLabel: String? = null): Map<String, Any> {
 		val model = mutableMapOf<String, Any>()
 		model.putAll(projectModel)
-		model.put("currentPage", currentPage)
-		model.put("totalPages", totalPages)
-		model.put("isFirst", currentPage == 1)
-		model.put("isLast", currentPage >= totalPages)
-		model.put("previousPage", currentPage - 1)
-		model.put("nextPage", currentPage + 1)
-		model.put("nextIsLast", currentPage == totalPages)
-		model.put("prevIsFirst", (currentPage - 1) == 1)
-		model.put("totalPosts", totalPosts)
-		model.put("posts", posts)
-		model.put("pagination", buildPaginationList(currentPage, totalPages))
+		model["currentPage"] = currentPage
+		model["totalPages"] = totalPages
+		model["isFirst"] = currentPage == 1
+		model["isLast"] = currentPage >= totalPages
+		model["previousPage"] = currentPage - 1
+		model["nextPage"] = currentPage + 1
+		model["nextIsLast"] = currentPage == totalPages
+		model["prevIsFirst"] = (currentPage - 1) == 1
+		model["totalPosts"] = totalPosts
+		model["posts"] = posts
+		model["pagination"] = buildPaginationList(currentPage, totalPages)
 		if (tagLabel != null) {
-			model.put("tag", tagLabel)
-			model.put("title", "Posts tagged '$tagLabel'")
+			model["tag"] = tagLabel
+			model["title"] = "Posts tagged '$tagLabel'"
 		} else {
-			model.put("title", "All posts")
+			model["title"] = "All posts"
 		}
 
 		return model
