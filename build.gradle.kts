@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-group = "org.liamjd.bascule.lib"
-version = "0.0.29"
+group = "org.liamjd.bascule-lib"
+version = "0.1.2"
 
 val kotlin_version = "1.6.21"
 val snakeyaml_version = "1.23"
@@ -67,12 +67,13 @@ tasks.withType<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar> {
 	minimize()
 }
 
+configurations {
+}
+
 // publishing
 publishing {
 	publications {
 		create<MavenPublication>("maven") {
-			groupId = "org.liamjd.bascule.lib"
-			artifactId = "bascule-lib"
 			from(components["java"])
 		}
 	}
