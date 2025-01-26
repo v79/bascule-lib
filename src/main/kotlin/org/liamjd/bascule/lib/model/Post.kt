@@ -25,17 +25,17 @@ interface Post {
 
     fun toModel(): Map<String, Any?> {
         val modelMap = mutableMapOf<String, Any?>()
-        modelMap.put("sourceFileName", sourceFileName)
-        modelMap.put("url", url)
-        modelMap.put("title", title)
-        modelMap.put("author", author)
-        modelMap.put("layout", layout)
-        modelMap.put("date", date)
-        modelMap.put("tags", tags)
-        modelMap.put("slug", slug)
-        modelMap.put("attributes", attributes)
-        modelMap.put("newer", newer)
-        modelMap.put("older", older)
+        modelMap["sourceFileName"] = sourceFileName
+        modelMap["url"] = url
+        modelMap["title"] = title
+        modelMap["author"] = author
+        modelMap["layout"] = layout
+        modelMap["date"] = date
+        modelMap["tags"] = tags
+        modelMap["slug"] = slug
+        modelMap["attributes"] = attributes
+        modelMap["newer"] = newer
+        modelMap["older"] = older
 
         return modelMap
     }

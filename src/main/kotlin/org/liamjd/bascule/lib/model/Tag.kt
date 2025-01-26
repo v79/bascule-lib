@@ -6,7 +6,7 @@ data class Tag(val category: TagCategory, val label: String, var url: String, va
     // I don't care about postCount, etc when storing in a set
     override fun equals(other: Any?): Boolean {
         if(other is Tag) {
-            if(this.label.equals(other.label) && (this.category.equals(other.category))) {
+            if(this.label == other.label && (this.category == other.category)) {
                 return true
             }
         }
