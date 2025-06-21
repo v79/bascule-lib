@@ -74,6 +74,18 @@ publishing {
 	publications {
 		create<MavenPublication>("maven") {
 			from(components["java"])
+			groupId = "org.liamjd"
+			artifactId = "bascule-lib"
+		}
+	}
+	repositories {
+		maven {
+			name = "GitHubPackages"
+			url = uri("https://maven.pkg.github.com/v79/bascule-lib")
+			credentials {
+				username = (project.findProperty("gpr.user") ?: System.getenv("GH_USERNAME")) as String?
+				password = (project.findProperty("gpr.key") ?: System.getenv("GH_PAT_REPO")) as String?
+			}
 		}
 	}
 }
