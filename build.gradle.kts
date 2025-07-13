@@ -14,7 +14,7 @@ val spek_version = "2.0.18"
 plugins {
     kotlin("jvm") version "1.6.21"
     `maven-publish`
-    id("com.github.johnrengelman.shadow") version "6.1.0"
+    id("com.gradleup.shadow") version "8.3.8"
     kotlin("plugin.serialization") version "1.6.21"
 }
 
@@ -61,7 +61,7 @@ configurations.implementation {
     exclude(group = " org.jetbrains.kotlin", module = "kotlin-stdlib")
 }
 
-tasks.withType<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar> {
+tasks.shadowJar {
     archiveClassifier.set("")
     minimize()
 }
@@ -79,13 +79,13 @@ publishing {
         }
     }
     repositories {
-        maven {
+       /* maven {
             name = "GitHubPackages"
             url = uri("https://maven.pkg.github.com/v79/bascule-lib")
             credentials {
                 username = (project.findProperty("gpr.user") ?: System.getenv("GH_USERNAME")) as String?
                 password = (project.findProperty("gpr.key") ?: System.getenv("GH_PAT_REPO")) as String?
             }
-        }
+        }*/
     }
 }
