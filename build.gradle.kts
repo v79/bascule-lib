@@ -1,21 +1,20 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 group = "org.liamjd.bascule"
-version = "0.3.2"
+version = "0.4.0"
 
-val kotlin_version = "1.6.21"
+val kotlin_version = "1.9.20"
 val snakeyaml_version = "1.23"
 val mockk_version = "1.12.4"
 val flexmark_version = "0.61.0"
 val slf4j_version = "1.7.26"
 val coroutines_version = "1.6.2"
-val spek_version = "2.0.18"
 
 plugins {
-    kotlin("jvm") version "1.6.21"
+    kotlin("jvm") version "1.9.20"
     `maven-publish`
     id("com.gradleup.shadow") version "8.3.8"
-    kotlin("plugin.serialization") version "1.6.21"
+    kotlin("plugin.serialization") version "1.9.20"
 }
 
 repositories {
@@ -25,7 +24,7 @@ repositories {
 
 dependencies {
     // stdlib
-    implementation(kotlin("stdlib", "1.6.21"))
+    implementation(kotlin("stdlib", "1.9.20"))
     // reflection
     implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlin_version")
 
@@ -37,11 +36,7 @@ dependencies {
 
     // testing
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.3.2")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.3.2")
-    ("org.junit.jupiter:junit-jupiter-params:5.3.2")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.3.2")
-    testImplementation("org.spekframework.spek2:spek-dsl-jvm:$spek_version")
-    testRuntimeOnly("org.spekframework.spek2:spek-runner-junit5:$spek_version")
     testImplementation("io.mockk:mockk:$mockk_version")
     // coroutines
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version")
@@ -49,12 +44,17 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform {
-        includeEngines("spek2")
     }
 }
 
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
 tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "11"
+    kotlinOptions {
+        jvmTarget = "21"
+    }
 }
 
 configurations.implementation {
@@ -79,13 +79,13 @@ publishing {
         }
     }
     repositories {
-       /* maven {
+       maven {
             name = "GitHubPackages"
             url = uri("https://maven.pkg.github.com/v79/bascule-lib")
             credentials {
                 username = (project.findProperty("gpr.user") ?: System.getenv("GH_USERNAME")) as String?
                 password = (project.findProperty("gpr.key") ?: System.getenv("GH_PAT_REPO")) as String?
             }
-        }*/
+        }
     }
 }
