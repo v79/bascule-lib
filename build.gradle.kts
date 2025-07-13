@@ -6,7 +6,7 @@ version = "0.4.0"
 val kotlin_version = "1.9.20"
 val snakeyaml_version = "2.4"
 val mockk_version = "1.12.4"
-val flexmark_version = "0.61.0"
+val flexmark_version = "0.64.8"
 val slf4j_version = "1.7.26"
 val coroutines_version = "1.6.2"
 
