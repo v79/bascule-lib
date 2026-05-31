@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 group = "org.liamjd.bascule"
-version = "0.4.0"
+version = "0.5.0"
 
 val kotlin_version = "1.9.20"
 val snakeyaml_version = "2.4"
