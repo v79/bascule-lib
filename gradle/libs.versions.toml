@@ -3,9 +3,8 @@ kotlin = "1.9.22"
 snakeyaml = "2.6"
 mockk = "1.13.17"
 flexmark = "0.64.8"
-slf4j = "1.7.36"
 coroutines = "1.7.3"
-shadow = "8.1.1"
+shadow = "8.3.8"
 junit = "5.10.2"
 
 [libraries]
@@ -20,5 +19,5 @@ kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-cor
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
-shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow" }
+shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
