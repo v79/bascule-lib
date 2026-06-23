@@ -2,8 +2,9 @@ package org.liamjd.bascule.lib.generators
 
 import org.liamjd.bascule.lib.model.Post
 
-abstract class AbstractPostListGenerator(val posts: List<Post>, val numPosts: Int = 1, val postsPerPage: Int) {
+abstract class AbstractPostListGenerator(val posts: List<Post>, val layout: String, val numPosts: Int = 1, val postsPerPage: Int) {
 
+	val layouts = "${layout}s"
 	/**
 	 * Construct pagination model for the current page in a list of posts
 	 */
@@ -19,13 +20,13 @@ abstract class AbstractPostListGenerator(val posts: List<Post>, val numPosts: In
 		model["nextIsLast"] = currentPage == totalPages
 		model["prevIsFirst"] = (currentPage - 1) == 1
 		model["totalPosts"] = totalPosts
-		model["posts"] = posts
+		model[layouts] = posts
 		model["pagination"] = buildPaginationList(currentPage, totalPages)
 		if (tagLabel != null) {
 			model["tag"] = tagLabel
-			model["title"] = "Posts tagged '$tagLabel'"
+			model["title"] = "$layouts tagged '$tagLabel'"
 		} else {
-			model["title"] = "All posts"
+			model["title"] = "All $layouts"
 		}
 
 		return model
