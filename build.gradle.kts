@@ -1,20 +1,13 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 group = "org.liamjd.bascule"
-version = "0.5.0"
-
-val kotlin_version = "1.9.20"
-val snakeyaml_version = "2.4"
-val mockk_version = "1.12.4"
-val flexmark_version = "0.64.8"
-val slf4j_version = "1.7.26"
-val coroutines_version = "1.6.2"
+version = "0.5.3"
 
 plugins {
-    kotlin("jvm") version "1.9.20"
+    alias(libs.plugins.kotlin.jvm)
     `maven-publish`
-    id("com.gradleup.shadow") version "8.3.8"
-    kotlin("plugin.serialization") version "1.9.20"
+    alias(libs.plugins.shadow)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 repositories {
@@ -23,27 +16,30 @@ repositories {
 }
 
 dependencies {
-    // stdlib
-    implementation(kotlin("stdlib", "1.9.20"))
     // reflection
-    implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlin_version")
+    api(libs.kotlin.reflect)
 
     // snakeyaml
-    implementation("org.yaml:snakeyaml:$snakeyaml_version")
+    implementation(libs.snakeyaml)
 
-    // markdown - probably want to be more selective with this!
-    implementation("com.vladsch.flexmark:flexmark-all:$flexmark_version")
+    // markdown
+    implementation(libs.flexmark.all)
 
-    // testing
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.3.2")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.3.2")
-    testImplementation("io.mockk:mockk:$mockk_version")
+    // Testing
+    testImplementation(libs.kotlin.test.junit5)
+    testImplementation(libs.junit.jupiter.api)
+    testRuntimeOnly(libs.junit.jupiter.engine)
+    testImplementation(libs.mockk)
+
     // coroutines
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version")
-}
+    testImplementation(libs.kotlinx.coroutines.core)}
 
 tasks.test {
-    useJUnitPlatform {
+    useJUnitPlatform()
+    testLogging {
+        events("passed", "skipped", "failed")
+        exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
+        showStandardStreams = true
     }
 }
 

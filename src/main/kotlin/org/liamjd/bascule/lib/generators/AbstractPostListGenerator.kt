@@ -7,7 +7,8 @@ abstract class AbstractPostListGenerator(val posts: List<Post>, val numPosts: In
 	/**
 	 * Construct pagination model for the current page in a list of posts
 	 */
-	fun buildPaginationModel(projectModel: Map<String, Any>, currentPage: Int, totalPages: Int, posts: List<Post>, totalPosts: Int, tagLabel: String? = null): Map<String, Any> {
+	fun buildPaginationModel(projectModel: Map<String, Any>, currentPage: Int, totalPages: Int, posts: List<Post>, totalPosts: Int, tagLabel: String? = null, layout: String): Map<String, Any> {
+		val layouts = "${layout}s"
 		val model = mutableMapOf<String, Any>()
 		model.putAll(projectModel)
 		model["currentPage"] = currentPage
@@ -20,12 +21,13 @@ abstract class AbstractPostListGenerator(val posts: List<Post>, val numPosts: In
 		model["prevIsFirst"] = (currentPage - 1) == 1
 		model["totalPosts"] = totalPosts
 		model["posts"] = posts
+		model["layout"] = layout
 		model["pagination"] = buildPaginationList(currentPage, totalPages)
 		if (tagLabel != null) {
 			model["tag"] = tagLabel
-			model["title"] = "Posts tagged '$tagLabel'"
+			model["title"] = "$layouts tagged '$tagLabel'"
 		} else {
-			model["title"] = "All posts"
+			model["title"] = "All $layouts"
 		}
 
 		return model
