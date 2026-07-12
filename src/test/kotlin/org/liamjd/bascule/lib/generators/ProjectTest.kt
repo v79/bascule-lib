@@ -7,161 +7,158 @@ import org.liamjd.bascule.lib.model.Project
 
 class ProjectTest {
 
-	@Test
-	fun `throws exception for an empty file`() {
-		assertThrows<RuntimeException> {
-			Project(yaml.EMPTY)
-		}
-	}
+    @Test
+    fun `throws exception for an empty file`() {
+        assertThrows<RuntimeException> {
+            Project(yaml.EMPTY)
+        }
+    }
 
-	@Test
-	fun `builds project with minimal yaml file`() {
-		val project = Project(yaml.MINIMAL)
+    @Test
+    fun `constructs project with the minimal yaml file`() {
+        val project = Project(yaml.MINIMAL)
+        assertNotNull(project)
+        assertEquals(Expected.name, project.name)
+        assertEquals(Expected.theme, project.theme)
+    }
 
-		assertNotNull(project)
-		assertEquals("minimalTest", project.model["siteName"])
-		assertEquals(expected.theme, project.theme)
-		assertEquals(expected.layout_default, project.postLayouts.first())
-	}
+    @Test
+    fun `throws exception for an invalid directory`() {
+        assertThrows<RuntimeException> {
+            Project(yaml.INVALID_DIRECTORIES)
+        }
+    }
 
-	@Test
-	fun `minimal yaml file has default directories defined`() {
-		val project = Project(yaml.MINIMAL)
+    @Test
+    fun `minimal yaml file has default directories defined`() {
+        val project = Project(yaml.MINIMAL)
 
-		assertNotNull(project)
-		assertEquals(expected.sources, project.dirs.sources.name)
-		assertEquals(expected.output, project.dirs.output.name)
-		assertEquals(expected.templates, project.dirs.templates.name)
-		assertEquals(expected.assets, project.dirs.assets.name)
-		assertNull(project.dirs.custom)
-	}
+        assertNotNull(project)
+        assertEquals(Expected.sources, project.config.directories.sources.name)
+        assertEquals(Expected.output, project.config.directories.output.name)
+        assertEquals(Expected.templates, project.config.directories.templates.name)
+        assertEquals(Expected.assets, project.config.directories.assets.name)
+        assertNull(project.config.directories.custom)
+    }
 
-	@Test
-	fun `minimal yaml file with own directories defined`() {
-		val project = Project(yaml.OWN_DIRS)
+    @Test
+    fun `minimal yaml file with own directories defined`() {
+        val project = Project(yaml.OWN_DIRS)
 
-		assertNotNull(project)
-		assertEquals("alpha", project.dirs.sources.name)
-		assertEquals("beta", project.dirs.output.name)
-		assertEquals("gamma", project.dirs.templates.name)
-		assertEquals("delta", project.dirs.assets.name)
-		assertNull(project.dirs.custom)
-	}
+        assertNotNull(project)
+        assertEquals("alpha", project.config.directories.sources.name)
+        assertEquals("beta", project.config.directories.output.name)
+        assertEquals("gamma", project.config.directories.templates.name)
+        assertEquals("delta", project.config.directories.assets.name)
+        assertNull(project.config.directories.custom)
+    }
 
-	@Test
-	fun `yaml only has custom directories, rest are default`() {
-		val project = Project(yaml.CUSTOM_ONLY)
+    @Test
+    fun `yaml provides an array of standard generator names`() {
+        val project = Project(yaml.CUSTOM_GENERATOR_PIPELINE)
+        assertNotNull(project)
 
-		assertNotNull(project)
-		assertEquals(expected.sources, project.dirs.sources.name)
-		assertEquals(expected.output, project.dirs.output.name)
-		assertEquals(expected.templates, project.dirs.templates.name)
-		assertEquals(expected.assets, project.dirs.assets.name)
-		assertNotNull(project.dirs.custom)
-		assert(project.dirs.custom!!.containsKey("pdf"))
-		val pdf = project.dirs.custom!!["pdf"]!!.absoluteFile.name
-		assertEquals(pdf, "pdfsGoHere")
+        assertNotNull(project.config)
+        assertNotNull(project.config.generators)
+        assertEquals(3, project.config.generators!!.size)
+        val generators: ArrayList<String> = project.config.generators!!
+        val generatorNames = generators.map { it.substringAfterLast(".") }
+        assert(generatorNames.contains(Expected.generator_index))
+        assert(generatorNames.contains(Expected.generator_nav))
+        assert(generatorNames.contains(Expected.generator_google))
+    }
 
-	}
+    @Test
+    fun `yaml provides distinct postLayout configuration`() {
+        val project = Project(yaml.CUSTOM_POST_LAYOUTS)
+        assertNotNull(project)
 
-	@Test
-	fun `yaml has a mix of own dirs and custom directories`() {
-		val project = Project(yaml.MIX_OF_DIRS)
-
-		assertNotNull(project)
-		assertEquals("episilon", project.dirs.sources.name)
-		assertEquals(expected.output, project.dirs.output.name)
-		assertEquals(expected.templates, project.dirs.templates.name)
-		assertEquals(expected.assets, project.dirs.assets.name)
-
-		assertNotNull(project.dirs.custom)
-		assert(project.dirs.custom!!.containsKey("pdf"))
-		val pdf = project.dirs.custom!!["pdf"]!!.absoluteFile.name
-		assertEquals("customPDF", pdf)
-	}
-
-	@Test
-	fun `yaml provides an array of standard generator names`() {
-		val project = Project(yaml.CUSTOM_GENERATOR_PIPELINE)
-		assertNotNull(project)
-
-		assertNotNull(project.configMap)
-		assertNotNull(project.generators)
-		assertEquals(3, project.generators!!.size)
-		assert(project.generators!!.contains(expected.generator_index))
-		assert(project.generators!!.contains(expected.generator_nav))
-		assert(project.generators!!.contains(expected.generator_google))
-	}
-
-	@Test
-	fun `yaml provides distinct postLayout configuration`() {
-		val project = Project(yaml.CUSTOM_POST_LAYOUTS)
-		assertNotNull(project)
-
-		assertNotNull(project.configMap)
-		assertNotNull(project.postLayouts)
-		assertEquals(2, project.postLayouts.size)
-		assert(project.postLayouts.contains(expected.layout_genre))
-		assert(project.postLayouts.contains(expected.layout_composer))
-		assert(!project.postLayouts.contains(expected.layout_default))
-	}
+        assertNotNull(project.config)
+        assertNotNull(project.config.postLayouts)
+        assertEquals(2, project.config.postLayouts.size)
+        assert(project.config.postLayouts.contains(Expected.layout_genre))
+        assert(project.config.postLayouts.contains(Expected.layout_composer))
+        assert(!project.config.postLayouts.contains(Expected.layout_default))
+    }
 }
 
 object yaml {
-	val EMPTY = """
+    val EMPTY = """
 
 	""".trimIndent()
 
-	val MINIMAL = """
-		siteName: minimalTest
-	""".trimIndent()
+    val MINIMAL = """
+		--- # Project properties
+		name: minimalTest
+		theme: bulma
+		--- # Project configuration
+		directories:
+			source: sources
+			output: output
+			templates: templates
+			assets: assets
+	""".trimIndent().replace("\t", "  ")
 
-	val OWN_DIRS = """
-		siteName: ownDirs
+    val INVALID_DIRECTORIES = """
+		--- # Project properties
+		name: minimalTest
+		theme: bulma
+		--- # Project configuration
+		directories:
+	""".trimIndent().replace("\t", "  ")
+
+    val OWN_DIRS = """
+		--- # Project properties
+		name: minimalTest
+		theme: bulma
+		--- # Project configuration
 		directories:
 			source: alpha
 			output: beta
 			templates: gamma
 			assets: delta
-	""".replace("\t", "  ")
+	""".trimIndent().replace("\t", "  ")
 
-	val CUSTOM_ONLY = """
+    val CUSTOM_GENERATOR_PIPELINE = """
+        --- # Project properties
+		name: minimalTest
+		theme: bulma
+		--- # Project configuration
 		directories:
-			custom:
-				pdf: pdfsGoHere
-	""".replace("\t", "  ")
-
-	val MIX_OF_DIRS = """
-		siteName: mixedDirs
-		directories:
-			source: episilon
-			custom:
-				pdf: customPDF
-	""".replace("\t", "  ")
-
-	val CUSTOM_GENERATOR_PIPELINE = """
-		siteName: customeGenPipeline
+			source: sources
+			output: site
+			templates: templates
+			assets: assets
 		generators: [IndexPageGenerator, PostNavigationGenerator, org.google.sitemapxml.Generator]
-	""".replace("\t", "  ")
+	""".trimIndent().replace("\t", "  ")
 
-	val CUSTOM_POST_LAYOUTS = """
+    val CUSTOM_POST_LAYOUTS = """
+          --- # Project properties
+		name: minimalTest
+		theme: bulma
+		--- # Project configuration
+		directories:
+			source: sources
+			output: site
+			templates: templates
+			assets: assets
 		postLayouts: [composer,genre]
-	""".replace("\t", "  ")
+	""".trimIndent().replace("\t", "  ")
 }
 
-object expected {
-	val sources = "sources"
-	val output = "output"
-	val templates = "templates"
-	val assets = "assets"
+object Expected {
+    const val sources = "sources"
+    const val output = "output"
+    const val templates = "templates"
+    const val assets = "assets"
+    const val name = "minimalTest"
+    const val theme = "bulma"
 
-	val theme = "bulma"
-
-	val generator_index = "org.liamjd.bascule.pipeline.IndexPageGenerator"
-	val generator_nav = "org.liamjd.bascule.pipeline.PostNavigationGenerator"
-	val generator_taxonmy = "org.liamjd.bascule.pipeline.TaxonomyNavigationGenerator"
-	val generator_google = "org.google.sitemapxml.Generator"
-	val layout_genre = "genre"
-	val layout_composer = "composer"
-	val layout_default = "post"
+    val generator_index = "IndexPageGenerator"
+    val generator_nav = "PostNavigationGenerator"
+    val generator_taxonmy = "TaxonomyNavigationGenerator"
+    val generator_google = "Generator"
+    val layout_genre = "genre"
+    val layout_composer = "composer"
+    val layout_default = "post"
 }
