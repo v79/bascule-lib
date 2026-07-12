@@ -27,7 +27,7 @@ class Project(yamlString: YamlConfig) {
     var clean: Boolean = true
 
     val model: Map<String, Any>
-        get() = ProjectProperties(name, theme, dateFormat, dateTimeFormat, tags, postsPerPage).toMap()
+        get() = ProjectProperties(name, theme, dateFormat, dateTimeFormat, tags, postsPerPage).toMap() + customAttributes
 
     init {
         // Split the YAML config into separate documents
@@ -36,7 +36,6 @@ class Project(yamlString: YamlConfig) {
             throw RuntimeException("Yaml configuration file is blank!")
         }
         val yamlDocuments = splitYamlDocuments(yamlString)
-        println(yamlDocuments.joinToString("\n\n"))
 
         if (yamlDocuments.size < 2) {
             throw RuntimeException("Yaml configuration file is missing required fields - there there must be at least two documents")
@@ -50,6 +49,7 @@ class Project(yamlString: YamlConfig) {
 
         // Parse document 0, the mandatory project properties
         if (yamlDocuments[0].isBlank()) throw RuntimeException("Must specify at least a name and a theme for the project")
+
         val projectProperties: Map<String, Any> = yaml.load(yamlDocuments[0])
         name = getConfigString(projectProperties, "name", parentFolder.name)
         theme = getConfigString(projectProperties, "theme")

@@ -87,6 +87,8 @@ class ProjectTest {
         assertNotNull(project)
         assertEquals("Liam", project.customAttributes["author"])
         assertEquals(true, project.customAttributes["debug"])
+        assert(project.model.containsKey("author"))
+        assert(project.model.containsKey("debug"))
     }
 }
 
