@@ -80,6 +80,14 @@ class ProjectTest {
         assert(project.config.postLayouts.contains(Expected.layout_composer))
         assert(!project.config.postLayouts.contains(Expected.layout_default))
     }
+
+    @Test
+    fun `custom properties are added to the project model`() {
+        val project = Project(yaml.CUSTOM_PROPERTIES)
+        assertNotNull(project)
+        assertEquals("Liam", project.customAttributes["author"])
+        assertEquals(true, project.customAttributes["debug"])
+    }
 }
 
 object yaml {
@@ -143,6 +151,22 @@ object yaml {
 			templates: templates
 			assets: assets
 		postLayouts: [composer,genre]
+	""".trimIndent().replace("\t", "  ")
+
+    val CUSTOM_PROPERTIES = """
+          --- # Project properties
+		name: minimalTest
+		theme: bulma
+		--- # Project configuration
+		directories:
+			source: sources
+			output: site
+			templates: templates
+			assets: assets
+		postLayouts: [composer,genre]
+        --- # Custom properties
+        author: Liam
+        debug: true
 	""".trimIndent().replace("\t", "  ")
 }
 

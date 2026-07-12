@@ -1,5 +1,6 @@
 package org.liamjd.bascule.lib.model
 
+import com.vladsch.flexmark.util.data.MutableDataSet
 import org.yaml.snakeyaml.Yaml
 import java.io.File
 import kotlin.collections.filterNot
@@ -15,7 +16,7 @@ const val DEFAULT_GEN_PACKAGE = "org.liamjd.bascule.pipeline."
 
 class Project(yamlString: YamlConfig) {
 
-    val name: String
+    val name: String // this is probably unnecessary but harmless
     val theme: Theme
     val tags: Set<String>
     val dateFormat: String
@@ -23,8 +24,10 @@ class Project(yamlString: YamlConfig) {
     val config: ProjectConfig
     val customAttributes: Map<String, Any>
     val postsPerPage: Int
+    var clean: Boolean = true
 
-    private val parentFolder: File
+    val model: Map<String, Any>
+        get() = ProjectProperties(name, theme, dateFormat, dateTimeFormat, tags, postsPerPage).toMap()
 
     init {
         // Split the YAML config into separate documents
@@ -33,6 +36,7 @@ class Project(yamlString: YamlConfig) {
             throw RuntimeException("Yaml configuration file is blank!")
         }
         val yamlDocuments = splitYamlDocuments(yamlString)
+        println(yamlDocuments.joinToString("\n\n"))
 
         if (yamlDocuments.size < 2) {
             throw RuntimeException("Yaml configuration file is missing required fields - there there must be at least two documents")
@@ -41,7 +45,7 @@ class Project(yamlString: YamlConfig) {
             throw RuntimeException("Yaml configuration file has too many documents - there there must be at most three documents")
         }
 
-        parentFolder = File(System.getProperty("user.dir"))
+        val parentFolder = File(System.getProperty("user.dir"))
 
 
         // Parse document 0, the mandatory project properties
@@ -73,14 +77,10 @@ class Project(yamlString: YamlConfig) {
      * 3. The third are any custom attributes
      */
     private fun splitYamlDocuments(yamlConfig: String) = yamlConfig.split(
-        Regex(
-            "---"
-        )
-    ).map(
-        String::trimIndent
+        Regex("---")
     ).filter(
         String::isNotBlank
-    ).filterNot { it.startsWith("#", false) }.toTypedArray()
+    ).toTypedArray()
 
     /**
      * Finds the value of a key in the config map, if it exists, otherwise throws an exception
@@ -116,7 +116,10 @@ class ProjectConfig(configuration: String, parentFolder: File) {
     val directories: Directories
     val extensions: ArrayList<String>?
     val generators: ArrayList<String>?
-    val postLayouts: Set<String>
+    var postLayouts: Set<String>
+    val parentDir: File = parentFolder
+
+    val markdownOptions: MutableDataSet = MutableDataSet()
 
     init {
         val yaml = Yaml()
@@ -213,6 +216,9 @@ class ProjectConfig(configuration: String, parentFolder: File) {
     }
 }
 
+/**
+ * Helper class to represent mandatory project properties
+ */
 internal class ProjectProperties(
     val name: String,
     val theme: String,
@@ -220,4 +226,13 @@ internal class ProjectProperties(
     val dateTimeFormat: String = "YYYY-MM-dd HH:mm:ss",
     val tags: Set<String> = emptySet(),
     val postsPerPage: Int = 5
-)
+) {
+    fun toMap(): Map<String, Any> = mapOf(
+        "name" to name,
+        "theme" to theme,
+        "dateFormat" to dateFormat,
+        "dateTimeFormat" to dateTimeFormat,
+        "tags" to tags,
+        "postsPerPage" to postsPerPage
+    )
+}
