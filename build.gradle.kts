@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 group = "org.liamjd.bascule"
-version = "0.5.3"
+version = "0.6.0"
 
 plugins {
     alias(libs.plugins.kotlin.jvm)
@@ -46,6 +46,7 @@ tasks.test {
 java {
     sourceCompatibility = JavaVersion.VERSION_21
     targetCompatibility = JavaVersion.VERSION_21
+    withSourcesJar()
 }
 tasks.withType<KotlinCompile> {
     kotlinOptions {
