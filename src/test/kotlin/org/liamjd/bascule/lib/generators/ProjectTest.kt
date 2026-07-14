@@ -90,6 +90,15 @@ class ProjectTest {
         assert(project.model.containsKey("author"))
         assert(project.model.containsKey("debug"))
     }
+
+    @Test
+    fun `additional config options are loaded`() {
+        val project = Project(yaml.ADDITIONAL_CONFIG_OPTIONS)
+        assertNotNull(project)
+        assertNotNull(project.config.options)
+        assertEquals(true, project.config.options["outputMarkdown"])
+        assertEquals(false, project.config.options["outputYaml"])
+    }
 }
 
 object yaml {
@@ -170,6 +179,22 @@ object yaml {
         author: Liam
         debug: true
 	""".trimIndent().replace("\t", "  ")
+
+    val ADDITIONAL_CONFIG_OPTIONS = """
+---
+name: minimalTest
+theme: bulma
+---
+directories:
+  source: sources
+  output: output
+  templates: templates
+  assets: assets
+options:
+   outputMarkdown: true
+   outputYaml: false
+postLayouts: [composer,genre]
+    """.trimIndent().replace("\t", "  ")
 }
 
 object Expected {
