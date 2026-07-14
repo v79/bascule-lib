@@ -3,7 +3,6 @@ package org.liamjd.bascule.lib.model
 import com.vladsch.flexmark.util.data.MutableDataSet
 import org.yaml.snakeyaml.Yaml
 import java.io.File
-import kotlin.collections.filterNot
 
 typealias Theme = String
 typealias YamlConfig = String
@@ -27,7 +26,14 @@ class Project(yamlString: YamlConfig) {
     var clean: Boolean = true
 
     val model: Map<String, Any>
-        get() = ProjectProperties(name, theme, dateFormat, dateTimeFormat, tags, postsPerPage).toMap() + customAttributes
+        get() = ProjectProperties(
+            name,
+            theme,
+            dateFormat,
+            dateTimeFormat,
+            tags,
+            postsPerPage
+        ).toMap() + customAttributes
 
     init {
         // Split the YAML config into separate documents
@@ -120,6 +126,7 @@ class ProjectConfig(configuration: String, parentFolder: File) {
     val parentDir: File = parentFolder
 
     val markdownOptions: MutableDataSet = MutableDataSet()
+    var options: Map<String, Any>
 
     init {
         val yaml = Yaml()
@@ -128,12 +135,14 @@ class ProjectConfig(configuration: String, parentFolder: File) {
             extensions = null
             generators = null
             postLayouts = setOf("post")
+            options = emptyMap()
         } else {
             val configMap: Map<String, Any> = yaml.load(configuration)
             directories = getConfigDirectories(configMap, parentFolder)
             extensions = getConfigPlugins(configMap, "extensions")
             generators = getConfigPlugins(configMap, "generators")
             postLayouts = getPostLayoutConfig(configMap)
+            options = getOptions(configMap)
         }
     }
 
@@ -188,7 +197,7 @@ class ProjectConfig(configuration: String, parentFolder: File) {
         if (configMap[pluginName] != null) {
             @Suppress("UNCHECKED_CAST")
             val pluginArray = configMap[pluginName] as ArrayList<String>
-            var packagedArray = mutableListOf<String>()
+            val packagedArray = mutableListOf<String>()
 
             for (plugin in pluginArray) {
                 if (!plugin.contains(".")) {
@@ -212,6 +221,15 @@ class ProjectConfig(configuration: String, parentFolder: File) {
         } else {
             val layoutList = configMap["postLayouts"] as ArrayList<String>
             return layoutList.toSet()
+        }
+    }
+
+    private fun getOptions(configMap: Map<String, Any>): MutableMap<String, Any> {
+        if (configMap["options"] == null) {
+            return mutableMapOf()
+        } else {
+            @Suppress("UNCHECKED_CAST")
+            return configMap["options"] as MutableMap<String, Any>
         }
     }
 }

@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 group = "org.liamjd.bascule"
-version = "0.6.0"
+version = "0.6.2"
 
 plugins {
     alias(libs.plugins.kotlin.jvm)
